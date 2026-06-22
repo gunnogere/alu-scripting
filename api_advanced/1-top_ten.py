@@ -4,11 +4,11 @@ import requests
 
 
 def top_ten(subreddit):
-    """Print the titles of the first 10 hot posts."""
+    """Print the first 10 hot post titles."""
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
 
     headers = {
-        "User-Agent": "python:api_advanced:v1.0 (by /u/reddit_user)"
+        "User-Agent": "Mozilla/5.0"
     }
 
     response = requests.get(
@@ -18,11 +18,13 @@ def top_ten(subreddit):
         allow_redirects=False
     )
 
-    if response.status_code != 200:
+    if response.status_code == 404:
         print("None")
         return
 
-    posts = response.json().get("data", {}).get("children", [])
-
-    for post in posts:
-        print(post.get("data", {}).get("title"))
+    try:
+        posts = response.json().get("data", {}).get("children", [])
+        for post in posts[:10]:
+            print(post.get("data", {}).get("title"))
+    except Exception:
+        print("None")
