@@ -1,27 +1,28 @@
 #!/usr/bin/python3
-"""Query Reddit API and return subreddit subscriber count."""
+"""Prints the titles of the first 10 hot posts of a subreddit."""
 import requests
 
 
-def number_of_subscribers(subreddit):
-    """Returns the total number of subscribers for a subreddit."""
-    url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
+def top_ten(subreddit):
+    """Print the titles of the first 10 hot posts."""
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+
     headers = {
         "User-Agent": "python:api_advanced:v1.0 (by /u/reddit_user)"
     }
 
-    try:
-        response = requests.get(
-            url,
-            headers=headers,
-            allow_redirects=False
-        )
+    response = requests.get(
+        url,
+        headers=headers,
+        params={"limit": 10},
+        allow_redirects=False
+    )
 
-        if response.status_code != 200:
-            return 0
+    if response.status_code != 200:
+        print("None")
+        return
 
-        data = response.json().get("data", {})
-        return data.get("subscribers", 0)
+    posts = response.json().get("data", {}).get("children", [])
 
-    except Exception:
-        return 0
+    for post in posts:
+        print(post.get("data", {}).get("title"))
