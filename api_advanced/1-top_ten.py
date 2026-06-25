@@ -6,7 +6,7 @@ import requests
 
 def top_ten(subreddit):
     """Print the titles of the first 10 hot posts."""
-    url = "https://www.reddit.com/r/programming/hot".format(subreddit)
+    url = "https://api.reddit.com/r/programming/hot".format(subreddit)
     headers = {"User-Agent": "python:reddit.api:v1.0"}
 
     response = requests.get(
